@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 Support Org Roadmap — Rithum</title>
+  <style>
+    /* ─── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #1c2a4a;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ─── Colour Tokens ─────────────────────────────────────────── */
+    :root {
+      --navy:       #0f1d3a;
+      --navy-mid:   #1e3460;
+      --teal:       #00b89c;
+      --teal-light: #e6f9f6;
+      --blue:       #2563eb;
+      --blue-light: #eff4ff;
+      --amber:      #f59e0b;
+      --amber-light:#fef9ec;
+      --purple:     #7c3aed;
+      --purple-light:#f5f0ff;
+      --slate:      #64748b;
+      --border:     #e2e8f0;
+      --card:       #ffffff;
+      --bg:         #f4f6fb;
+    }
+
+    /* ─── Nav ────────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    nav .logo {
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .9;
+    }
+    nav .logo span { color: var(--teal); }
+    nav .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    nav .nav-links a {
+      color: rgba(255,255,255,.72);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+    nav .nav-links a:hover { color: var(--teal); }
+    nav .badge {
+      background: var(--teal);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: .04em;
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      color: #fff;
+      padding: 64px 40px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: rgba(0,184,156,.07);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -.02em;
+    }
+    .hero h1 em { color: var(--teal); font-style: normal; }
+    .hero-summary {
+      font-size: 17px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.82);
+      max-width: 700px;
+      margin-bottom: 36px;
+    }
+    .hero-kpis {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-kpi .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.5);
+      font-weight: 600;
+    }
+    .hero-kpi .kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .hero-kpi .kpi-value span { color: var(--teal); }
+
+    /* ─── Layout Wrapper ─────────────────────────────────────────── */
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ─── Section Chrome ─────────────────────────────────────────── */
+    section { padding: 60px 32px; }
+    section:nth-child(even) { background: var(--card); }
+    .section-inner { max-width: 1060px; margin: 0 auto; }
+    #projects .section-inner { max-width: 1400px; padding: 0 32px; }
+    .section-header { margin-bottom: 36px; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--navy);
+    }
+    .section-sub {
+      font-size: 15px;
+      color: var(--slate);
+      margin-top: 8px;
+      max-width: 600px;
+    }
+
+    /* ─── Executive Summary ──────────────────────────────────────── */
+    .exec-summary-box {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a3566 100%);
+      border-radius: 16px;
+      padding: 36px 40px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .exec-summary-box::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 24px;
+      font-size: 160px;
+      color: rgba(0,184,156,.12);
+      font-family: Georgia, serif;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .exec-summary-box p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.88);
+      position: relative;
+      z-index: 1;
+    }
+    .exec-summary-box p + p { margin-top: 16px; }
+    .exec-summary-box strong { color: var(--teal); }
+
+    /* ─── Strategic Themes ───────────────────────────────────────── */
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .theme-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .theme-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+    .theme-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 14px 14px 0 0;
+    }
+    .theme-card.teal::before  { background: var(--teal); }
+    .theme-card.blue::before  { background: var(--blue); }
+    .theme-card.purple::before{ background: var(--purple); }
+    .theme-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .theme-card.teal   .theme-icon { background: var(--teal-light); }
+    .theme-card.blue   .theme-icon { background: var(--blue-light); }
+    .theme-card.purple .theme-icon { background: var(--purple-light); }
+    .theme-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .theme-card p {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+    .theme-tag {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .theme-card.teal   .theme-tag { background: var(--teal-light);   color: #006e5e; }
+    .theme-card.blue   .theme-tag { background: var(--blue-light);   color: #1d4ed8; }
+    .theme-card.purple .theme-tag { background: var(--purple-light); color: #5b21b6; }
+
+    /* ─── Service Delivery Model ─────────────────────────────────── */
+    .sdm-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sdm-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .sdm-label {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-height: 70px;
+      justify-content: center;
+    }
+    .sdm-label .sdm-sublabel {
+      font-size: 10px;
+      font-weight: 500;
+      opacity: .6;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .sdm-row.l0 .sdm-label { background: #1e3460; }
+    .sdm-row.l1 .sdm-label { background: #0f4a7a; }
+    .sdm-row.l2 .sdm-label { background: #006e5e; }
+    .sdm-row.l3 .sdm-label { background: #3730a3; }
+    .sdm-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .sdm-chip {
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+    .sdm-row.l0 .sdm-chip { background: #e8f0fe; border-color: #c7d7fd; color: #1a3566; }
+    .sdm-row.l1 .sdm-chip { background: #e7f8f5; border-color: #b5ede6; color: #065f52; }
+    .sdm-row.l2 .sdm-chip { background: var(--teal-light); border-color: #9ae6d8; color: #00504a; }
+    .sdm-row.l3 .sdm-chip { background: var(--purple-light); border-color: #d4b9fd; color: #4c1d95; }
+    .sdm-arrow {
+      text-align: center;
+      color: var(--slate);
+      font-size: 18px;
+      padding: 2px 0;
+      grid-column: 1 / -1;
+      opacity: .4;
+    }
+
+    /* ─── Quarterly Roadmap ──────────────────────────────────────── */
+    .quarters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .quarter-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .quarter-head {
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .quarter-head .q-num {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      opacity: .6;
+      margin-bottom: 4px;
+    }
+    .quarter-head .q-theme {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .q1 .quarter-head { border-top: 4px solid #2563eb; }
+    .q2 .quarter-head { border-top: 4px solid var(--teal); }
+    .q3 .quarter-head { border-top: 4px solid var(--amber); }
+    .q4 .quarter-head { border-top: 4px solid var(--purple); }
+    .quarter-items { padding: 14px 18px; }
+    .q-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      color: #2d3748;
+    }
+    .q-item:last-child { border-bottom: none; }
+    .q-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .q1 .q-item::before { background: #2563eb; }
+    .q2 .q-item::before { background: var(--teal); }
+    .q3 .q-item::before { background: var(--amber); }
+    .q4 .q-item::before { background: var(--purple); }
+
+    /* ─── Full Timeline Bar ──────────────────────────────────────── */
+    .timeline-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+    .timeline-table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+    .timeline-table thead th {
+      background: var(--navy);
+      color: rgba(255,255,255,.7);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 10px 12px;
+      text-align: left;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+    .timeline-table thead th:first-child { width: 200px; }
+    .timeline-table tbody tr:nth-child(even) td { background: #f8fafc; }
+    .timeline-table tbody tr:hover td { background: #eef4ff; }
+    .timeline-table tbody td {
+      padding: 9px 12px;
+      font-size: 13px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+    }
+    .timeline-table tbody td:first-child {
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .timeline-table tbody td:nth-child(2) { color: var(--slate); font-size: 12px; }
+    .bar {
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .bar.strategy  { background: #2563eb; }
+    .bar.process   { background: var(--teal); }
+    .bar.tech      { background: var(--amber); color: #78350f; }
+    .bar.growth    { background: var(--purple); }
+    .cat-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .cat-badge.strategy  { background: #dbeafe; color: #1d4ed8; }
+    .cat-badge.process   { background: var(--teal-light); color: #065f52; }
+    .cat-badge.tech      { background: #fef9ec; color: #92400e; }
+    .cat-badge.growth    { background: var(--purple-light); color: #5b21b6; }
+
+    /* ─── Projects Table ─────────────────────────────────────────── */
+    .projects-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .projects-table thead tr {
+      background: var(--navy);
+    }
+    .projects-table thead th {
+      color: rgba(255,255,255,.75);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .projects-table tbody tr:nth-child(even) td { background: #f8fafc; }
+    .projects-table tbody tr:hover td { background: #eef4ff; }
+    .projects-table tbody td {
+      padding: 11px 16px;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+    }
+    .projects-table tbody td:first-child { font-weight: 600; color: var(--navy); }
+    .q-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: var(--slate);
+    }
+    .q-tag.q1 { background: #dbeafe; color: #1e40af; }
+    .q-tag.q2 { background: var(--teal-light); color: #065f52; }
+    .q-tag.q3 { background: #fef9ec; color: #92400e; }
+    .q-tag.q4 { background: var(--purple-light); color: #5b21b6; }
+    .q-tag.tbd { background: #f1f5f9; color: #475569; }
+    .q-tag.y2027 { background: #fdf2f8; color: #9d174d; }
+
+    /* ─── Status Badges ──────────────────────────────────────────── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-badge.done        { background: #dcfce7; color: #166534; }
+    .status-badge.done::before        { background: #16a34a; }
+    .status-badge.in-progress { background: #dbeafe; color: #1e40af; }
+    .status-badge.in-progress::before { background: #3b82f6; }
+    .status-badge.not-started { background: #f1f5f9; color: #475569; }
+    .status-badge.not-started::before { background: #94a3b8; }
+    .status-badge.deferred    { background: #fdf2f8; color: #9d174d; }
+    .status-badge.deferred::before    { background: #ec4899; }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.45);
+      font-size: 12px;
+      text-align: center;
+      padding: 24px 32px;
+      letter-spacing: .03em;
+    }
+    footer strong { color: rgba(255,255,255,.7); }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      nav .nav-links { display: none; }
+      .hero { padding: 40px 20px 52px; }
+      .hero h1 { font-size: 28px; }
+      section { padding: 40px 20px; }
+      .themes-grid { grid-template-columns: 1fr; }
+      .quarters-grid { grid-template-columns: repeat(2, 1fr); }
+      .sdm-row { grid-template-columns: 90px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ────────────────────────────────────────────────── -->
+<nav>
+  <div class="logo">Rithum <span>·</span> Client Ops</div>
+  <ul class="nav-links">
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#themes">Themes</a></li>
+    <li><a href="#sdm">Delivery Model</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#projects">Projects</a></li>
+  </ul>
+  <span class="badge">2026 Plan</span>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Support Org · 2026 Strategy</div>
+    <h1>2026 <em>Support</em> Roadmap</h1>
+    <p class="hero-summary">
+      A year of transformative change — unifying teams, technology, and delivery models while
+      deploying AI capabilities across every layer of the support stack to improve client outcomes
+      and scale operational efficiency.
+    </p>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <span class="kpi-label">Strategic Themes</span>
+        <span class="kpi-value"><span>3</span></span>
+      </div>
+      <div class="hero-kpi">
+        <span class="kpi-label">Initiatives</span>
+        <span class="kpi-value"><span>25</span></span>
+      </div>
+      <div class="hero-kpi">
+        <span class="kpi-label">Platform Target</span>
+        <span class="kpi-value">Salesforce</span>
+      </div>
+      <div class="hero-kpi">
+        <span class="kpi-label">Horizon</span>
+        <span class="kpi-value">Jan – <span>Dec '26</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Executive Summary ─────────────────────────────────────────── -->
+<section id="summary">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Executive Summary</div>
+      <h2 class="section-title">Where the Support Org is Heading in 2026</h2>
+    </div>
+    <div class="exec-summary-box">
+      <p>
+        The Rithum support organization enters 2026 mid-transformation. Following the merger of two
+        distinct business units, the team is executing a structured, year-long program to consolidate
+        people, processes, and platforms into a <strong>single, scalable operating model</strong> —
+        while simultaneously deploying AI capabilities that will define how we deliver support
+        at scale going forward.
+      </p>
+      <p>
+        Three strategic themes anchor the year: <strong>Unification</strong> (one team, one tech stack,
+        one delivery model), <strong>AI Enablement</strong> (intelligent case deflection, internal
+        knowledge agents, and self-service tooling), and <strong>Team Structure</strong> (the org design,
+        metrics, and role clarity that make everything else sustainable). By Q4, the org will be operating
+        fully on Salesforce, ServiceNow will be retired, and the L0–L3 support tiering model will be live
+        across both legacy platforms — setting a strong foundation for 2027.
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;">
+      <div style="background:#dcfce7;border:1px solid #bbf7d0;border-radius:12px;padding:18px 20px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#166534;margin-bottom:6px;">Q1 Complete</div>
+        <div style="font-size:14px;color:#14532d;line-height:1.5;">6 of 8 Q1 initiatives are fully <strong>done</strong> — incident management unified, Brands status page migrated, SSE and Manager roles launched, senior manager layer consolidated.</div>
+      </div>
+      <div style="background:#dbeafe;border:1px solid #bfdbfe;border-radius:12px;padding:18px 20px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1e40af;margin-bottom:6px;">Q2 In Flight</div>
+        <div style="font-size:14px;color:#1e3a8a;line-height:1.5;">Salesforce consolidation and AI governance are the primary in-flight work streams. SF migration remains the gating dependency for Q3 tech work.</div>
+      </div>
+      <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:18px 20px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9d174d;margin-bottom:6px;">Notable Change</div>
+        <div style="font-size:14px;color:#831843;line-height:1.5;"><strong>Premium Onboarding &amp; Support</strong> has moved to <strong>2027</strong>. Design is actively in progress; full launch will follow SF consolidation and a 2026 pilot.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Strategic Themes ──────────────────────────────────────────── -->
+<section id="themes">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Strategic Themes</div>
+      <h2 class="section-title">Three Pillars Driving 2026</h2>
+      <p class="section-sub">Every initiative this year maps to at least one of these core themes.</p>
+    </div>
+    <div class="themes-grid">
+
+      <div class="theme-card teal">
+        <div class="theme-icon">🔗</div>
+        <h3>Unification</h3>
+        <p>
+          Consolidating the two legacy support organizations into a single operating unit — unified
+          roles, processes, tooling, and delivery models. The centerpiece is migrating all support
+          activity onto <strong>Salesforce</strong> and retiring ServiceNow, eliminating the dual-system
+          overhead that currently burdens both agents and customers.
+        </p>
+        <span class="theme-tag">Platform · Process · Org</span>
+      </div>
+
+      <div class="theme-card blue">
+        <div class="theme-icon">🤖</div>
+        <h3>AI Enablement</h3>
+        <p>
+          Deploying AI at every layer of the support stack. <strong>External-facing bots</strong> handle
+          case deflection and first-contact resolution at L0, while <strong>internal knowledge agents</strong>
+          give platform experts instant access to resolution guidance — reducing handle time and
+          improving consistency of answers.
+        </p>
+        <span class="theme-tag">Case Deflection · Knowledge</span>
+      </div>
+
+      <div class="theme-card purple">
+        <div class="theme-icon">🏗️</div>
+        <h3>Team Structure</h3>
+        <p>
+          Building the organizational scaffolding that makes unification stick — standardized metrics,
+          aligned management layers, and a consistent delivery model across both business units. This
+          includes <strong>manager consolidation</strong>, skills assessments, and the launch of new
+          senior support engineering roles.
+        </p>
+        <span class="theme-tag">Org Design · Metrics · Roles</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Service Delivery Model ────────────────────────────────────── -->
+<section id="sdm">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Operating Model</div>
+      <h2 class="section-title">L0–L3 Service Delivery Architecture</h2>
+      <p class="section-sub">
+        The target state — a tiered model where AI handles the highest volume at the lowest cost,
+        escalating to human experts only when needed.
+      </p>
+    </div>
+    <div class="sdm-wrap">
+
+      <div class="sdm-row l0">
+        <div class="sdm-label">
+          Level 0
+          <span class="sdm-sublabel">AI Deflection</span>
+        </div>
+        <div class="sdm-content">
+          <span class="sdm-chip">AI-Powered Case Deflection</span>
+          <span class="sdm-chip">External Customer Bots</span>
+          <span class="sdm-chip">Self-Service Portal</span>
+          <span class="sdm-chip">Documentation-Driven Responses</span>
+        </div>
+      </div>
+
+      <div class="sdm-arrow">↓ Escalation when unresolved</div>
+
+      <div class="sdm-row l1">
+        <div class="sdm-label">
+          Level 1
+          <span class="sdm-sublabel">Outsourced</span>
+        </div>
+        <div class="sdm-content">
+          <span class="sdm-chip">BPO Partners</span>
+          <span class="sdm-chip">Outsourced Platform Experts</span>
+          <span class="sdm-chip">Escalation from AI Interactions</span>
+          <span class="sdm-chip">Internal AI Knowledge Agents</span>
+        </div>
+      </div>
+
+      <div class="sdm-arrow">↓ Complex & advanced issues</div>
+
+      <div class="sdm-row l2">
+        <div class="sdm-label">
+          Level 2
+          <span class="sdm-sublabel">Rithum FTE</span>
+        </div>
+        <div class="sdm-content">
+          <span class="sdm-chip">Rithum Platform Experts</span>
+          <span class="sdm-chip">FTE Platform Experts</span>
+          <span class="sdm-chip">Direct Escalations for Key Topics</span>
+          <span class="sdm-chip">Improve Customer Experience</span>
+        </div>
+      </div>
+
+      <div class="sdm-arrow">↓ Senior-level escalations</div>
+
+      <div class="sdm-row l3">
+        <div class="sdm-label">
+          Level 3
+          <span class="sdm-sublabel">Senior Support</span>
+        </div>
+        <div class="sdm-content">
+          <span class="sdm-chip">Support Enablement Projects</span>
+          <span class="sdm-chip">Software Support Engineers</span>
+          <span class="sdm-chip">Advanced Escalations</span>
+          <span class="sdm-chip">Premium Support — Key Accounts</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Quarterly Roadmap ──────────────────────────────────────────── -->
+<section id="roadmap">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Improvement Roadmap</div>
+      <h2 class="section-title">Quarterly Themes &amp; Priorities</h2>
+      <p class="section-sub">Each quarter has a primary theme that sequences the work logically — Discovery → Team → Tech → Scale.</p>
+    </div>
+    <div class="quarters-grid">
+
+      <div class="quarter-card q1">
+        <div class="quarter-head">
+          <div class="q-num">Q1 · Jan–Mar · <span style="color:#16a34a;font-size:11px;">All complete ✓</span></div>
+          <div class="q-theme">Discovery</div>
+        </div>
+        <div class="quarter-items">
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">2026 Outcome Planning</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Org Design Planning</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Final Delivery Model Decisions</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Standardized Incident Management</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Migrate Brands Status Page</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Brands Support Transformation (structure)</div>
+          <div class="q-item">Knowledge Unification (continuing)</div>
+          <div class="q-item">Full AI Rollout — POC started</div>
+        </div>
+      </div>
+
+      <div class="quarter-card q2">
+        <div class="quarter-head">
+          <div class="q-num">Q2 · Apr–Jun · <span style="color:#2563eb;font-size:11px;">In flight</span></div>
+          <div class="q-theme">Team Unification</div>
+        </div>
+        <div class="quarter-items">
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">Senior Manager Consolidation</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">New Role: Manager, Client Operations</div>
+          <div class="q-item" style="text-decoration:line-through;opacity:.55;">New Role: SSE (launched May 4)</div>
+          <div class="q-item">Salesforce Consolidation</div>
+          <div class="q-item">Knowledge Unification (completing)</div>
+          <div class="q-item">Full AI Rollout (advancing)</div>
+          <div class="q-item">AI Governance Framework</div>
+        </div>
+      </div>
+
+      <div class="quarter-card q3">
+        <div class="quarter-head">
+          <div class="q-num">Q3 · Jul–Sep</div>
+          <div class="q-theme">Tech Unification</div>
+        </div>
+        <div class="quarter-items">
+          <div class="q-item">ServiceNow Retirement</div>
+          <div class="q-item">Unified Support Contact</div>
+          <div class="q-item">Full Skills Assessment</div>
+          <div class="q-item">Identify Key Product Enhancements</div>
+          <div class="q-item">AI Governance Framework (wrap-up)</div>
+        </div>
+      </div>
+
+      <div class="quarter-card q4">
+        <div class="quarter-head">
+          <div class="q-num">2027 Preparation</div>
+          <div class="q-theme">Planning &amp; Design</div>
+        </div>
+        <div class="quarter-items">
+          <div class="q-item">Scope &amp; design Premium Support (2027 launch)</div>
+          <div class="q-item">Plan Phone → SF Migration (2027)</div>
+          <div class="q-item">Plan Close Email-to-Case (2027)</div>
+          <div class="q-item">Plan AI Language Support (2027)</div>
+          <div class="q-item">Plan Community Launch in SF Knowledge (2027)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Full Project Index ────────────────────────────────────────── -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Project Index</div>
+      <h2 class="section-title">All Initiatives — 2026</h2>
+      <p class="section-sub">Every action item mapped to its quarter and strategic category.</p>
+    </div>
+    <table class="projects-table">
+      <thead>
+        <tr>
+          <th>Initiative</th>
+          <th>Quarter</th>
+          <th>Status</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2026 Outcome Planning</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Defined measurable outcomes and KPIs for the full-year transformation program.</td>
+        </tr>
+        <tr>
+          <td>Org Design Planning</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Mapped the target org structure across both legacy business units ahead of consolidation.</td>
+        </tr>
+        <tr>
+          <td>Final Delivery Model Decisions</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Locked the L0–L3 operating model, BPO partnerships, and escalation paths.</td>
+        </tr>
+        <tr>
+          <td>Standardized Incident Management</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Unified incident classification, SLAs, response protocols, status page cadence, and CL training rolled out across Retailer and Brand Support.</td>
+        </tr>
+        <tr>
+          <td>Migrate Brands Status Page</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Retired the separate Brands status page and unified onto the broader Rithum status page — one source of truth during incidents.</td>
+        </tr>
+        <tr>
+          <td>Brands Support Transformation</td>
+          <td><span class="q-tag q1">Q1</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Completed structural planning and team bucketing for the L0–L3 Brands model (L2 escalations team + L3 projects team). AI and tech build phases follow in Q3.</td>
+        </tr>
+        <tr>
+          <td>Knowledge Unification</td>
+          <td><span class="q-tag q1">Q1</span> <span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Consolidating knowledge base content from both platforms into a single, authoritative source feeding the Salesforce and AI layers.</td>
+        </tr>
+        <tr>
+          <td>Full AI Rollout in Salesforce</td>
+          <td><span class="q-tag q1">Q1</span> <span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Deploying Salesforce Agentforce / Einstein across the case lifecycle. POC underway in the DataCloud sandbox; full rollout gated on SF consolidation completion.</td>
+        </tr>
+        <tr>
+          <td>Senior Manager Consolidation</td>
+          <td><span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Streamlined the support leadership layer — all managers now report to a single Senior Manager, removing redundancy between Retailer and Brand.</td>
+        </tr>
+        <tr>
+          <td>New Role: Manager, Client Operations</td>
+          <td><span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Established the Manager, Client Operations role as primary Gainsight and Salesforce admin and leader of the SSE advanced troubleshooting team.</td>
+        </tr>
+        <tr>
+          <td>New Role: Software Support Engineer (SSE)</td>
+          <td><span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge done">Done</span></td>
+          <td>Launched the SSE function (May 4) — the first technical career growth path in Support, targeting 50% deflection of engineering-bound tickets (~106 hrs/week returned to engineering).</td>
+        </tr>
+        <tr>
+          <td>Salesforce Consolidation</td>
+          <td><span class="q-tag q2">Q2</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Migrating both business units' case management fully onto Salesforce Service Cloud. Gating dependency for AI rollout, unified reporting, and Premium Support launch.</td>
+        </tr>
+        <tr>
+          <td>AI Governance Framework</td>
+          <td><span class="q-tag q2">Q2</span> <span class="q-tag q3">Q3</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Establishing policies, guardrails, and quality standards for AI use across Support, Success, and Onboarding — including approved tools, use cases, and quality review processes.</td>
+        </tr>
+        <tr>
+          <td>Full Skills Assessment</td>
+          <td><span class="q-tag q3">Q3</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>HR-led assessment of technical proficiency, soft skills, AI readiness, and career aspirations across all Retailer and Brand Support team members. Framework designed Apr, assessments through Jul, results by end of Q3.</td>
+        </tr>
+        <tr>
+          <td>ServiceNow Retirement</td>
+          <td><span class="q-tag q3">Q3</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Decommission the legacy ServiceNow platform once Salesforce migration is fully validated. Unlocks cost savings and eliminates dual-system overhead.</td>
+        </tr>
+        <tr>
+          <td>Unified Support Contact</td>
+          <td><span class="q-tag q3">Q3</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Launch a single, unified support entry point for customers across both legacy platforms — one number, one portal, one experience.</td>
+        </tr>
+        <tr>
+          <td>Identify Key Product Enhancements</td>
+          <td><span class="q-tag q3">Q3</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Use unified Salesforce support data as a structured signal into product for brand-side enhancements — the first time this data will exist in one place.</td>
+        </tr>
+        <tr>
+          <td>AI Language Support</td>
+          <td><span class="q-tag y2027">2027</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Extend multilingual support coverage — live translations in Salesforce Knowledge, chat, phone, and email for non-English-speaking clients.</td>
+        </tr>
+        <tr>
+          <td>Close Email-to-Case</td>
+          <td><span class="q-tag y2027">2027</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Transition inbound email channels to structured Salesforce case creation, eliminating untracked email-based resolution paths.</td>
+        </tr>
+        <tr>
+          <td>Premium Support</td>
+          <td><span class="q-tag y2027">2027</span></td>
+          <td><span class="status-badge in-progress">In Progress</span></td>
+          <td>Three-tier model (Standard / Premium / Enterprise) with ACV-based pricing. Design in progress; full launch moved to 2027. Conservative 3-year revenue projection: $2.87M–$11.44M depending on attach rate.</td>
+        </tr>
+        <tr>
+          <td>Phone Support Migration</td>
+          <td><span class="q-tag y2027">2027</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Moving inbound phone support from Amazon Connect (~$1.2K/mont sh) to Salesforce Agentforce Contact Center to create a unified case record from first contact. Deprecate phone support for suppliers and move to paid model (Premium Support)</td>
+        </tr>
+        <tr>
+          <td>Community Launch</td>
+          <td><span class="q-tag y2027">2027</span></td>
+          <td><span class="status-badge not-started">Not Started</span></td>
+          <td>Launch full client community within Salesforce Knowledge — giving customers a self-serve peer network alongside the unified knowledge base.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<footer>
+  <strong>Rithum · Global Client Operations</strong> — 2026 Support Org Roadmap &nbsp;|&nbsp;
+  Prepared by Jordan Christensen, Sr. Director Global Client Operations &nbsp;|&nbsp;
+  Last updated May 2026
+</footer>
+
+</body>
+</html>

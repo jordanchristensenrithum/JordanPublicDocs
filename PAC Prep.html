@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Event Intel Brief",
+  "schemaVersion": 1,
+  "description": "PAC Event Intelligence Brief — Salesforce Service Cloud Advisory Council, May 19 2026. Tab 1: attendee profiles with background, thought leadership, and conversation starters. Tab 2: synthesized product feedback across 6 themes with specific asks for Agentforce, implementation, and roadmap."
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforce PAC — Jordan Christensen</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f6f8;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white;
+    padding: 20px 32px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .nav-top-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .nav-top-row h1 { font-size: 1.25rem; font-weight: 700; }
+  .nav-subtitle { font-size: 0.75rem; opacity: 0.6; }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    padding: 9px 20px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.18s;
+    letter-spacing: 0.2px;
+    border-bottom: 3px solid transparent;
+  }
+  .tab-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+  .tab-btn.active {
+    color: white;
+    background: rgba(255,255,255,0.13);
+    border-bottom-color: #60a5fa;
+  }
+
+  /* ── ATTENDEES TAB ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .meta-bar {
+    padding: 10px 32px;
+    background: white;
+    border-bottom: 1px solid #e8eaf0;
+    font-size: 0.78rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .count-badge {
+    background: #0f3460;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  .attendee-controls {
+    padding: 14px 32px 10px;
+    background: white;
+    border-bottom: 1px solid #e8eaf0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    color: #1a1a2e;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .search-box:focus { border-color: #2563eb; background: white; }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #6b7280;
+    font-size: 0.73rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: #0f3460;
+    color: white;
+    border-color: #0f3460;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 18px;
+    padding: 22px 28px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.18s, box-shadow 0.18s;
+    border: 1px solid #eaecf2;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+
+  .card-header {
+    padding: 18px 20px 14px;
+    position: relative;
+    border-left: 4px solid var(--accent);
+  }
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 45%;
+    background: linear-gradient(to left, var(--accent-bg), transparent);
+    pointer-events: none;
+  }
+
+  .company-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .industry-tag {
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .person-name { font-size: 1.05rem; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
+  .person-title { font-size: 0.75rem; color: #6b7280; line-height: 1.35; padding-right: 40px; }
+  .sf-contact {
+    font-size: 0.68rem;
+    margin-top: 8px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sf-contact strong { color: #6b7280; }
+
+  .card-body { padding: 0; }
+  .section { border-top: 1px solid #f0f2f7; }
+  .section-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 11px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.73rem;
+    font-weight: 700;
+    color: #4b5563;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    transition: background 0.15s;
+  }
+  .section-toggle:hover { background: #f9fafc; }
+  .section-icon { font-size: 0.9rem; transition: transform 0.2s; }
+  .section-icon.open { transform: rotate(180deg); }
+  .section-content {
+    display: none;
+    padding: 4px 20px 16px;
+    font-size: 0.82rem;
+    color: #374151;
+    line-height: 1.6;
+  }
+  .section-content.open { display: block; }
+
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .pill {
+    background: #f0f4ff;
+    color: #3b4fd8;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.71rem;
+    font-weight: 500;
+  }
+  .spark-list { list-style: none; margin-top: 4px; }
+  .spark-list li {
+    padding: 5px 0 5px 20px;
+    position: relative;
+    border-bottom: 1px solid #f5f6f8;
+    font-size: 0.81rem;
+    line-height: 1.45;
+  }
+  .spark-list li:last-child { border-bottom: none; }
+  .spark-list li::before { content: '💬'; position: absolute; left: 0; font-size: 0.7rem; top: 6px; }
+  .news-item {
+    background: #f8f9ff;
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    margin: 6px 0;
+    font-size: 0.79rem;
+    line-height: 1.45;
+  }
+  .news-label {
+    font-size: 0.63rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #9ca3af; }
+
+  /* sector colours */
+  .tech { --accent: #2563eb; --accent-bg: #eff6ff; }
+  .manufacturing { --accent: #d97706; --accent-bg: #fffbeb; }
+  .energy { --accent: #059669; --accent-bg: #ecfdf5; }
+  .financial { --accent: #7c3aed; --accent-bg: #f5f3ff; }
+  .retail { --accent: #db2777; --accent-bg: #fdf2f8; }
+  .automotive { --accent: #dc2626; --accent-bg: #fef2f2; }
+  .services { --accent: #0891b2; --accent-bg: #ecfeff; }
+
+  /* ── FEEDBACK TAB ── */
+  .feedback-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 28px 60px;
+  }
+  .feedback-intro {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .feedback-intro h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: #1a1a2e; }
+  .feedback-intro p { font-size: 0.84rem; color: #4b5563; line-height: 1.65; }
+  .intro-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .intro-meta-item {
+    background: #f5f6f8;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    color: #374151;
+  }
+  .intro-meta-item strong { display: block; color: #1a1a2e; font-size: 0.78rem; margin-bottom: 1px; }
+
+  .theme-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .theme-header {
+    padding: 18px 24px 16px;
+    border-left: 5px solid var(--tc);
+    background: linear-gradient(to right, var(--tc-bg), white 60%);
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .theme-header:hover { filter: brightness(0.98); }
+  .theme-label {
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: 4px;
+  }
+  .theme-title { font-size: 0.98rem; font-weight: 700; color: #1a1a2e; line-height: 1.3; }
+  .theme-summary { font-size: 0.79rem; color: #6b7280; margin-top: 4px; line-height: 1.5; }
+  .theme-toggle-icon { font-size: 1rem; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
+  .theme-toggle-icon.open { transform: rotate(180deg); }
+  .theme-body {
+    display: none;
+    padding: 0 24px 22px;
+    border-top: 1px solid #f0f2f7;
+  }
+  .theme-body.open { display: block; }
+
+  .fb-section-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin: 16px 0 8px;
+  }
+  .fb-prose { font-size: 0.83rem; color: #374151; line-height: 1.7; }
+  .fb-prose + .fb-prose { margin-top: 10px; }
+
+  .evidence-list { list-style: none; margin-top: 6px; }
+  .evidence-list li {
+    padding: 8px 0 8px 22px;
+    position: relative;
+    border-bottom: 1px solid #f5f6f8;
+    font-size: 0.8rem;
+    color: #374151;
+    line-height: 1.5;
+  }
+  .evidence-list li:last-child { border-bottom: none; }
+  .evidence-list li::before {
+    content: attr(data-icon);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    font-size: 0.75rem;
+  }
+  .evidence-source {
+    font-size: 0.67rem;
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-left: 6px;
+  }
+
+  .ask-list { list-style: none; margin-top: 6px; }
+  .ask-list li {
+    display: flex;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f5f6f8;
+    font-size: 0.81rem;
+    color: #1a1a2e;
+    line-height: 1.5;
+    align-items: flex-start;
+  }
+  .ask-list li:last-child { border-bottom: none; }
+  .ask-num {
+    background: var(--tc);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .works-well-list { list-style: none; margin-top: 6px; }
+  .works-well-list li {
+    padding: 6px 0 6px 22px;
+    position: relative;
+    font-size: 0.81rem;
+    color: #374151;
+    line-height: 1.5;
+    border-bottom: 1px solid #f5f6f8;
+  }
+  .works-well-list li:last-child { border-bottom: none; }
+  .works-well-list li::before { content: '✅'; position: absolute; left: 0; top: 6px; font-size: 0.72rem; }
+
+  /* Theme colours */
+  .tc-blue { --tc: #2563eb; --tc-bg: #eff6ff; }
+  .tc-amber { --tc: #d97706; --tc-bg: #fffbeb; }
+  .tc-red { --tc: #dc2626; --tc-bg: #fef2f2; }
+  .tc-purple { --tc: #7c3aed; --tc-bg: #f5f3ff; }
+  .tc-green { --tc: #059669; --tc-bg: #ecfdf5; }
+  .tc-teal { --tc: #0891b2; --tc-bg: #ecfeff; }
+
+  .key-asks-block {
+    background: linear-gradient(135deg, #0f3460, #1e4a7a);
+    color: white;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-top: 8px;
+  }
+  .key-asks-block h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .key-asks-block p { font-size: 0.79rem; opacity: 0.75; margin-bottom: 18px; line-height: 1.5; }
+  .asks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .asks-grid { grid-template-columns: 1fr; } }
+  .ask-chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .ask-chip-num {
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ask-chip-text strong { display: block; font-weight: 700; margin-bottom: 2px; }
+  .ask-chip-text span { opacity: 0.75; font-size: 0.74rem; }
+
+  @media (max-width: 600px) {
+    .grid, .feedback-page { padding: 14px 12px 24px; }
+    .top-nav { padding: 16px 16px 0; }
+    .attendee-controls, .meta-bar { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV with tabs -->
+<div class="top-nav">
+  <div class="nav-top-row">
+    <h1>🎯 Salesforce Service Cloud PAC — May 19, 2026</h1>
+    <span class="nav-subtitle">Jordan Christensen · Sr. Director, Global Client Operations · Rithum</span>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('attendees', this)">👥 Attendee Intel</button>
+    <button class="tab-btn" onclick="switchTab('feedback', this)">📋 My Feedback</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!--  TAB 1: ATTENDEES                             -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-attendees" class="tab-content active">
+  <div class="attendee-controls">
+    <input class="search-box" type="text" id="searchInput" placeholder="Search by name, company, or keyword…">
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="tech">Tech</button>
+      <button class="filter-btn" data-filter="manufacturing">Manufacturing</button>
+      <button class="filter-btn" data-filter="energy">Energy</button>
+      <button class="filter-btn" data-filter="financial">Financial</button>
+      <button class="filter-btn" data-filter="retail">Retail</button>
+      <button class="filter-btn" data-filter="automotive">Automotive</button>
+      <button class="filter-btn" data-filter="services">Services</button>
+    </div>
+  </div>
+  <div class="meta-bar">
+    Showing <span class="count-badge" id="visibleCount">16</span> of 16 attendees &nbsp;· Click any section to expand
+  </div>
+
+  <div class="grid" id="cardGrid">
+
+    <!-- 1. Merhawi Tamrat - Google -->
+    <div class="card tech" data-name="Merhawi Redda Tamrat" data-company="Google" data-sector="tech">
+      <div class="card-header">
+        <div class="company-badge">Google <span class="industry-tag">Tech / Cloud</span></div>
+        <div class="person-name">Merhawi Redda Tamrat</div>
+        <div class="person-title">Senior Director, Cloud CX — Data & Systems</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Sonya Goudreau</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Merhawi leads Cloud CX Data & Systems at Google, based in San Francisco. He previously held roles at Google and Genentech, giving him a blend of tech-platform and life-sciences operational experience. His work sits at the intersection of customer experience infrastructure and AI-powered data systems—exactly what Google is investing heavily in for 2026.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Thought Leadership <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">Jan 2026</div>Google Cloud launched <strong>Gemini Enterprise for CX</strong>—prebuilt agentic AI for customer service & shopping, deployable in days.</div>
+            <div class="news-item"><div class="news-label">2026 Report</div>Google Cloud published its <em>2026 AI Agent Trends in CX</em> report, highlighting agentic workflows, concierge CX models, and security automation as dominant themes.</div>
+            His team is at the forefront of operationalizing Gemini models inside enterprise contact centers.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"How is the internal Google team actually deploying Gemini agents vs. what you're selling to customers—are the use cases the same?"</li>
+              <li>"Your 2026 AI Agent trends report talked about 'concierge CX'—what does that look like in practice for enterprise support teams?"</li>
+              <li>"How do you think about data quality and systems integration as the biggest bottleneck to CX AI—not the model itself?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Taylor Rood - ISN -->
+    <div class="card services" data-name="Taylor Rood" data-company="ISN" data-sector="services">
+      <div class="card-header">
+        <div class="company-badge">ISN <span class="industry-tag">Contractor Management</span></div>
+        <div class="person-name">Taylor Rood, PMP</div>
+        <div class="person-title">Sr. Team Lead / Technical Lead, Salesforce Solution Architect</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Kristyn Leung</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Taylor is a 7× Salesforce-certified technical lead and PMP at ISN, where she architects Salesforce implementations across the enterprise. Career path grew from Advanced Marketing Specialist & Salesforce Admin → Team Lead → Solution Architect—a rare combo of marketing intuition and deep technical chops. ISN is a leading contractor and supplier management platform.
+            <div class="pill-list"><span class="pill">7× Salesforce Certified</span><span class="pill">PMP</span><span class="pill">Solution Architect</span><span class="pill">CRM Strategy</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Going from marketing to becoming a 7× certified Salesforce architect is a great story—what drove that pivot?"</li>
+              <li>"When you're architecting Salesforce for an enterprise as complex as ISN, what's the hardest integration challenge you've run into?"</li>
+              <li>"How do you see Agentforce changing the support workflows you've built?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Nick Fusi - GM Financial -->
+    <div class="card financial" data-name="Nick Fusi" data-company="GM Financial" data-sector="financial">
+      <div class="card-header">
+        <div class="company-badge">GM Financial <span class="industry-tag">Auto Finance</span></div>
+        <div class="person-name">Nick Fusi</div>
+        <div class="person-title">Technology Principal Lead, Salesforce COE</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Patrick Caruso</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Nick leads Salesforce platform strategy at GM Financial's Center of Excellence in Fort Worth, TX. GM Financial is the captive auto lending arm of General Motors—meaning Nick's CRM work directly impacts dealer relationships and consumer auto loan servicing at enormous scale. His role bridging the Salesforce COE and systems integration puts him at the center of how a major financial institution standardizes CX tech across business units.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Running a Salesforce COE at a regulated financial institution must come with a very different compliance and governance layer—how does that shape your roadmap?"</li>
+              <li>"With EV adoption accelerating, how is that affecting customer service volume and complexity at GMF?"</li>
+              <li>"Are you seeing the COE model gain traction at other GM Financial business units, or is adoption still a push?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Mary Catherine Plunkett - Autodesk -->
+    <div class="card tech" data-name="Mary Catherine Plunkett" data-company="Autodesk" data-sector="tech">
+      <div class="card-header">
+        <div class="company-badge">Autodesk <span class="industry-tag">Design Software</span></div>
+        <div class="person-name">Mary Catherine Plunkett</div>
+        <div class="person-title">VP, Customer Success Design</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Lydia Grendahl</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Unusual background: Master's in Biochemistry & Biophysics + stints at a labor union (UNITE HERE!), SF Public Press, and management consulting before Autodesk in 2012. Led the CX transformation during Autodesk's pivotal shift from perpetual licenses to subscriptions. Certified LUMA instructor and service design practitioner.
+            <div class="pill-list"><span class="pill">Human-Centered Design</span><span class="pill">LUMA Instructor</span><span class="pill">Service Design</span><span class="pill">Jobs to Be Done</span><span class="pill">Subscription GTM</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Thought Leadership <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">Podcast</div>Featured on <em>Good Revenue</em> ep. 70: "Why Most Go-To-Market Models FAIL: The Human-Centered Design Fix."</div>
+            <div class="news-item"><div class="news-label">2025</div>Published on Agentic AI as 2025's defining shift: "2024 was ChatGPT/Copilot—2025 is autonomous agents that act."</div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"You navigated Autodesk through one of the most complex subscription transitions in software—what did you learn about keeping customers loyal during that disruption?"</li>
+              <li>"Your work with LUMA and service design is really distinct for a VP role—how did that methodology become core to how you run your team?"</li>
+              <li>"You've said 2025 is the year of agentic AI—how does that change customer success design specifically?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. John Elliott - Dynatrace -->
+    <div class="card tech" data-name="John Elliott" data-company="Dynatrace" data-sector="tech">
+      <div class="card-header">
+        <div class="company-badge">Dynatrace <span class="industry-tag">Observability / APM</span></div>
+        <div class="person-name">John Elliott</div>
+        <div class="person-title">VP, Support Operations</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Brooke Vidlund</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            John leads Support Operations at Dynatrace—the AI-powered observability platform used by Fortune 500s to monitor cloud infrastructure. Their customer base is deeply technical (enterprise DevOps, SRE teams), meaning support must handle highly complex, time-sensitive escalations. Dynatrace's own Davis AI powers their observability platform, making him a peer in the "AI inside the product and inside support" conversation.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Supporting enterprise engineering teams must be a completely different challenge than B2C support—how do you calibrate SLAs when the customer's own SLAs are on the line?"</li>
+              <li>"Dynatrace's Davis AI is core to your product. Are you also using AI to power your own support operations internally?"</li>
+              <li>"How do you handle the tension between automation and the expectation of premium, hands-on support that enterprise DevOps teams demand?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Hanna Sandoval - ESRI -->
+    <div class="card tech" data-name="Hanna Sandoval" data-company="ESRI" data-sector="tech">
+      <div class="card-header">
+        <div class="company-badge">ESRI <span class="industry-tag">GIS / Geospatial</span></div>
+        <div class="person-name">Hanna Sandoval</div>
+        <div class="person-title">Service Cloud Product Manager / Sr. Business Analyst</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Drew Wilson</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Hanna works at Esri—the dominant player in GIS, known for ArcGIS. Focuses on Salesforce Service Cloud / Agentforce requirements across international distributor locations. Master's from University of Vechta (Germany). Previously managed Esri's Support Services unit.
+            <div class="pill-list"><span class="pill">Service Cloud / Agentforce</span><span class="pill">Business Analysis</span><span class="pill">International Teams</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Managing Salesforce requirements across international distributor locations sounds complex—how do you handle localization and regulatory differences?"</li>
+              <li>"What's your experience transitioning from Service Cloud to Agentforce—what's working and where is it still rough?"</li>
+              <li>"Esri serves everyone from city governments to federal agencies to environmental scientists—what's the single biggest support challenge cutting across all those segments?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Tim Butler - Iron Mountain -->
+    <div class="card services" data-name="Tim Butler" data-company="Iron Mountain" data-sector="services">
+      <div class="card-header">
+        <div class="company-badge">Iron Mountain <span class="industry-tag">Records / Digital Assets</span></div>
+        <div class="person-name">Tim Butler, Sr.</div>
+        <div class="person-title">VP, Head of Global Customer Care</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Eric Rattner</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Tim has 15+ years in CX, domestic and international. Leads Global Customer Care for Iron Mountain—world leader in physical and digital asset management operating in 60+ countries. Well-known in the Salesforce community; presented at Salesforce World Tour Atlanta. Active on LinkedIn and Twitter (@timbutlersr).
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Thought Leadership <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">Einstein AI Results</div>Iron Mountain achieved an <strong>80% case auto-close rate</strong> with Einstein AI. Chat abandonment dropped 70% (5% → 1.5%).</div>
+            <div class="news-item"><div class="news-label">WhatsApp + AI</div>Elevated global customer communication through WhatsApp integration with AI, emphasizing trust and data security.</div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"80% case auto-close rate with Einstein is remarkable—what was the single biggest unlock that made that possible?"</li>
+              <li>"Managing care across 60 countries means wildly different customer expectations. How do you standardize without losing local sensitivity?"</li>
+              <li>"WhatsApp as an enterprise service channel is still pretty novel in the US—are there usage patterns that surprised you?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Allison Payne - Outcomes -->
+    <div class="card services" data-name="Allison Payne" data-company="Outcomes" data-sector="services">
+      <div class="card-header">
+        <div class="company-badge">Outcomes <span class="industry-tag">Healthcare / SaaS</span></div>
+        <div class="person-name">Allison Payne</div>
+        <div class="person-title">VP, Service Operations</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Gregory Hopp</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Allison leads Service Operations at Outcomes—a healthcare SaaS company focused on pharmacy and patient engagement solutions, serving retail pharmacy chains, PBMs, and pharma manufacturers. Running service ops in healthcare requires navigating HIPAA, 21 CFR Part 11, and similar regulatory frameworks alongside CX excellence.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Running service ops in healthcare must mean your compliance and quality bar is fundamentally different—how does that shape how you build and measure your team?"</li>
+              <li>"With patient engagement becoming more tech-driven, how is the nature of what your customers need from support changing?"</li>
+              <li>"What does 'great support' mean when the downstream impact is patient outcomes?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Tiffani Harding - Digikey -->
+    <div class="card tech" data-name="Tiffani Harding" data-company="Digikey" data-sector="tech">
+      <div class="card-header">
+        <div class="company-badge">Digi-Key Electronics <span class="industry-tag">Electronics Distribution</span></div>
+        <div class="person-name">Tiffani Harding</div>
+        <div class="person-title">VP, Global Customer Support</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Brian Wright (Core) · Will Rice (Service)</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Tiffani leads Global Customer Support for Digi-Key—one of the world's largest electronic component distributors, headquartered in Thief River Falls, MN. Dual degree in Business and Speech Communication from MN State Mankato. Previous roles at Red Wing Shoes (Director, CX), Ergodyne, and Norwood BIC Graphic.
+            <div class="pill-list"><span class="pill">Global CX</span><span class="pill">Distribution</span><span class="pill">Minnesota-based</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Digi-Key serves everyone from garage engineers to massive OEM procurement—how do you design a global support experience that works across such a wide range of buyers?"</li>
+              <li>"Supply chain volatility in electronics components has been huge—how has that increased support volume or complexity for your team?"</li>
+              <li>"What transferred most directly from Red Wing Shoes to Digi-Key, and what's been a completely new learning curve?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Mandy Warren - FPL -->
+    <div class="card energy" data-name="Mandy Warren" data-company="FPL" data-sector="energy">
+      <div class="card-header">
+        <div class="company-badge">Florida Power & Light <span class="industry-tag">Utility / Energy</span></div>
+        <div class="person-name">Mandy Warren</div>
+        <div class="person-title">VP, Customer Service</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Joe Ditto</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Long-tenured leader at Florida Power & Light—a NextEra Energy subsidiary and the largest electric utility in the US by customer count (5.8M accounts). Based in West Palm Beach. 20+ years at FPL, meaning she's navigated major hurricanes, regulatory rate reviews, and the industry's shift toward renewables and digital self-service.
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"FPL serves nearly 6M customers in Florida—hurricane season must be the ultimate stress test. How do you prepare and surge for that?"</li>
+              <li>"Customers expect digital-first, but during an outage they want a human immediately. How do you design for both?"</li>
+              <li>"NextEra is the world's largest wind and solar producer—how is the energy transition changing what customers ask your team about?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. Tom Audette - Renewal by Andersen -->
+    <div class="card retail" data-name="Tom Audette" data-company="Renewal by Andersen" data-sector="retail">
+      <div class="card-header">
+        <div class="company-badge">Renewal by Andersen <span class="industry-tag">Home Improvement</span></div>
+        <div class="person-name">Tom Audette</div>
+        <div class="person-title">Sr. Director, Retail Digital Experience (IT)</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Tim Buchman</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            20+ years in retail home improvement. MBA from University of St. Thomas; General Management from Marquette. Career spans digital marketing leadership at Andersen Windows, Three Deep Marketing (agency), and Renaissance Exteriors. Focus: website, SEO, social, mobile/email marketing, and customer experience management.
+            <div class="pill-list"><span class="pill">Retail Digital</span><span class="pill">CX Management</span><span class="pill">Minnesota-based</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Home improvement is a high-consideration, high-emotion purchase—how do you think about digital supporting the in-home sales process rather than replacing it?"</li>
+              <li>"Andersen is a 120-year-old brand. How does digital transformation land internally with that kind of heritage?"</li>
+              <li>"Coming from an agency background—what's the thing most agency people don't understand about what enterprise digital actually looks like?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Rachel Conrad - Rockwell Automation -->
+    <div class="card manufacturing" data-name="Rachel Conrad" data-company="Rockwell Automation" data-sector="manufacturing">
+      <div class="card-header">
+        <div class="company-badge">Rockwell Automation <span class="industry-tag">Industrial Automation</span></div>
+        <div class="person-name">Rachael Conrad</div>
+        <div class="person-title">Global VP, Enterprise Customer Experience</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Jill Hershey</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Leads a global CX team of 3,000 at Rockwell Automation—world's largest company dedicated to industrial automation. MBA from Marquette; 25+ years experience. Recognized as a <em>Notable Woman in Manufacturing</em> by BizTimes Milwaukee. Shares content publicly on customer loyalty, digital transformation, and manufacturing trends.
+            <div class="pill-list"><span class="pill">3,000-person Global Team</span><span class="pill">Industrial Automation</span><span class="pill">Digital Transformation</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"Managing 3,000 people globally in CX—how do you keep a coherent culture and consistent standard of excellence at that scale?"</li>
+              <li>"Rockwell's customers are industrial engineers and plant operators—how does that shape what 'great support' means?"</li>
+              <li>"You've been recognized as a Notable Woman in Manufacturing—what's the biggest cultural shift you've seen in that industry over your career?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. Nada Aried - Safelite -->
+    <div class="card retail" data-name="Nada Aried" data-company="Safelite" data-sector="retail">
+      <div class="card-header">
+        <div class="company-badge">Safelite AutoGlass <span class="industry-tag">Auto Glass / Services</span></div>
+        <div class="person-name">Nada Aried</div>
+        <div class="person-title">EVP & Chief Digital Technology Officer</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>K.C. Greenwald</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            30+ years in specialty retail and services. Named the first-ever EVP & CIO at Bath & Body Works (2020–2024), then joined Safelite in Oct 2024 to lead technology and digital transformation. Sat on the Board of Directors at Floor & Decor Holdings since Jan 2025. Career rooted in L Brands companies since 1993.
+            <div class="pill-list"><span class="pill">30+ Yrs Experience</span><span class="pill">CIO / CDTO</span><span class="pill">Omni-channel</span><span class="pill">Supply Chain</span><span class="pill">Board Director</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Recent News <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">Oct 2024</div>Joined Safelite as EVP & CDTO, leading technology and transformation teams serving 6M consumers annually.</div>
+            <div class="news-item"><div class="news-label">Jan 2025</div>Appointed to Board of Directors of Floor & Decor Holdings (NYSE: FND).</div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"You were Bath & Body Works' first-ever CIO—what does it mean to build a technology org from scratch inside a company that had been operating successfully without one?"</li>
+              <li>"You joined Safelite recently—what's your first read on where the biggest digital opportunity is in their business?"</li>
+              <li>"Sitting on Floor & Decor's board while running Safelite's tech—how does that dual vantage point shape where you see retail tech heading?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. Mitch Aubin - Toyota -->
+    <div class="card automotive" data-name="Mitch Aubin" data-company="Toyota" data-sector="automotive">
+      <div class="card-header">
+        <div class="company-badge">Toyota North America <span class="industry-tag">Automotive</span></div>
+        <div class="person-name">Mitch Aubin</div>
+        <div class="person-title">Manager, Digital Consumer Experiences (DevOps PM)</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>(not listed)</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            BBA in MIS & Marketing from UT Austin; SAFe Agile certified. Career spans HP, CompuCom, QuickArrow, Mobi, CallidusCloud, and Tech Edge Advisors. At Toyota, sits within Dealer Consumer Technology Solutions, bridging customer-facing digital channels with dealer and field office operations.
+            <div class="pill-list"><span class="pill">Amazon Connect</span><span class="pill">Salesforce Service Cloud</span><span class="pill">Omnichannel</span><span class="pill">SAFe Agile</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Thought Leadership <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">AI Contact Center</div>Executing AI deployment using <strong>Amazon Connect + Salesforce Service Cloud Voice</strong>. Results: 4% self-service, 20% reduction in call handle time, 13% fewer transfers. Featured in TechTarget.</div>
+            <div class="news-item"><div class="news-label">In Progress</div>Building full omnichannel via Salesforce Chat + Digital Engagement; generative AI call summaries using real-time transcription.</div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"TechTarget covered your AI contact center deployment—what's been the most surprising result so far?"</li>
+              <li>"Amazon Connect and Salesforce together is an interesting stack choice—what drove that over something fully native in Salesforce?"</li>
+              <li>"Toyota is managing a 90-year-old brand while launching EVs and connected car services—how does that tension show up in your team's roadmap?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. Marcy Sackett - Trane Technologies -->
+    <div class="card manufacturing" data-name="Marcy Sackett" data-company="Trane" data-sector="manufacturing">
+      <div class="card-header">
+        <div class="company-badge">Trane Technologies <span class="industry-tag">HVAC / Sustainability</span></div>
+        <div class="person-name">Marcy Sackett, Ph.D.</div>
+        <div class="person-title">VP / Director, Information Technology</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Mike Fowler · Conner Snedden</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Ph.D. from Indiana University - Bloomington; BA from Wells College. Career spans Ingersoll Rand, Pearson VUE, Metropolitan State University, and consulting firms. Leads Enterprise Architecture and Employee Experience technology at Trane Technologies. Minneapolis-based.
+            <div class="pill-list"><span class="pill">Enterprise Architecture</span><span class="pill">Employee Experience Tech</span><span class="pill">PhD-level Research</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"A Ph.D. in an enterprise IT career is unusual—how does that academic lens influence how you approach technology architecture problems?"</li>
+              <li>"Trane is making big sustainability commitments. How is that strategic direction shaping the technology agenda?"</li>
+              <li>"Employee experience technology is a newer discipline within IT. What convinced you to invest in it, and how do you measure success?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16. Jody Allison - Xcel Energy -->
+    <div class="card energy" data-name="Jody Allison" data-company="Xcel Energy" data-sector="energy">
+      <div class="card-header">
+        <div class="company-badge">Xcel Energy <span class="industry-tag">Utility / Energy</span></div>
+        <div class="person-name">Jody Allison, CFE, CCE</div>
+        <div class="person-title">VP, Customer Transformation</div>
+        <div class="sf-contact">🔗 Salesforce Contact: <strong>Lori Lees (Service AE)</strong></div>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">👤 Background <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            Multi-industry background: National Grid, Paychex, Kodak, Algonquin Power & Utilities, and her own consulting firm before Xcel. BS + Executive MBA from Rochester Institute of Technology; 2023 Corporate Governance credential from UCLA Anderson. CFE + CCE certifications. Minneapolis-based.
+            <div class="pill-list"><span class="pill">CFE Certified</span><span class="pill">CCE Certified</span><span class="pill">Multi-utility Experience</span><span class="pill">UCLA Governance</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">📣 Recent Context <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <div class="news-item"><div class="news-label">Xcel Strategy</div>Xcel executing a <strong>$60B, 5-year capital plan</strong> targeting ~11% annualized rate base growth—driven by renewables, data center load growth, and grid resiliency. Creates significant customer communication complexity Jody's team must manage.</div>
+          </div>
+        </div>
+        <div class="section">
+          <button class="section-toggle" onclick="toggle(this)">💬 Conversation Starters <span class="section-icon">▾</span></button>
+          <div class="section-content">
+            <ul class="spark-list">
+              <li>"CFE and CCE certifications in a transformation role is a unique combination—how does the compliance/fraud lens shape how you design customer programs?"</li>
+              <li>"Utilities face pressure to explain rate increases while funding a $60B buildout. How do you communicate that story without destroying trust?"</li>
+              <li>"You've led transformation at National Grid, Algonquin, and now Xcel—what's the universal constant in utility customer transformation regardless of company?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</div><!-- /tab-attendees -->
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!--  TAB 2: MY FEEDBACK                           -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-feedback" class="tab-content">
+  <div class="feedback-page">
+
+    <div class="feedback-intro">
+      <h2>Rithum's Salesforce Feedback — Service Cloud PAC, May 19 2026</h2>
+      <p>Synthesized from Slack conversations, Notion project docs, and email threads across the Agentforce implementation over the past 8 months. Rithum is a B2B SaaS company (~300 person scale) using Salesforce Service Cloud as the primary support platform for two customer bases (Retailers and Suppliers) through an active ServiceNow → Salesforce migration. Agentforce is a strategic H2 2026 priority.</p>
+      <div class="intro-meta">
+        <div class="intro-meta-item"><strong>Salesforce Products in Use</strong>Service Cloud, Agentforce, Data Cloud, Einstein AI, MIAW (Live Chat)</div>
+        <div class="intro-meta-item"><strong>Current Phase</strong>Active ServiceNow migration; Agentforce internal agent in sandbox; external agent planned H2</div>
+        <div class="intro-meta-item"><strong>Team</strong>Jordan Christensen, Cole Garrow (Support Ops), Matt Schultz (SF Admin), Liz Meunier (SF Admin)</div>
+        <div class="intro-meta-item"><strong>Sources</strong>Slack (#p_agentforce-service-agent-imp, DMs), Notion (Agentforce April doc, AI Opportunity Map, Project Polaris), Email (POC wrap-up, AE correspondence)</div>
+      </div>
+    </div>
+
+    <div class="theme-card tc-red">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 1 · Agentforce Architecture</div>
+          <div class="theme-title">The 2-Field Relevance Limit Is the Biggest Blocker to Knowledge Agent Quality</div>
+          <div class="theme-summary">Agentforce can only scan two article fields (Title + Short Description) to determine whether a KB article is relevant—severely limiting answer quality for any article where the key content lives in the body.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">What We're Experiencing</div>
+        <p class="fb-prose">Our Agentforce knowledge agent produces inconsistent results that appear directly tied to what information is in the Title and Short Description fields vs. the article body. When a question's answer lives in the body of an article but isn't echoed in the two indexed fields, the agent either returns nothing or returns a tangentially related article with a generic "I couldn't find specific information" response.</p>
+        <p class="fb-prose">The agent works well for articles where the title closely mirrors how a user would phrase the question. It fails—sometimes completely—when the user's terminology, the article title, and the actual content diverge even slightly.</p>
+        <div class="fb-section-label">Specific Examples from Our Sandbox</div>
+        <ul class="evidence-list">
+          <li data-icon="✅">"How do you submit pricing updates for SKUs?" → Excellent, detailed multi-step response with correct source citations. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+          <li data-icon="✅">"How do I resolve order exceptions?" → Answered well. <span class="evidence-source">Slack · #p_agentforce-service-agent-imp</span></li>
+          <li data-icon="❌">"What are the requirements for connecting to AS2?" → "I couldn't find specific details." The AS2 URL is clearly documented in the KB. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+          <li data-icon="❌">"How do I process orders?" → "I couldn't find specific information on processing orders." Rephrased as "How do I ship orders?" → Full correct answer. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+          <li data-icon="❌">Instructions for uploading items to ACS — fails to find despite a well-written article existing. <span class="evidence-source">Slack · Cole Garrow, Apr 13</span></li>
+        </ul>
+        <div class="fb-section-label">Our Ask</div>
+        <ul class="ask-list">
+          <li><div class="ask-num">1</div><div><strong>Allow configurable field selection per Knowledge record type.</strong> We want to point Agentforce at the "Title" and "Procedure Body" fields for task-type articles, and "Title" and "Concept Body" for concept articles, rather than a one-size-fits-all Title + Short Description. Jordan raised this directly with the team in April 2026.</div></li>
+          <li><div class="ask-num">2</div><div><strong>Increase the relevance index to include a third field or a full-text AI summary field.</strong> Our workaround (adding a hidden AI-generated summary field to each article) is effective but requires significant KB maintenance overhead. A native solution would be preferable.</div></li>
+          <li><div class="ask-num">3</div><div><strong>Improve semantic/synonym matching.</strong> The agent should understand that "process orders" and "ship orders" likely refer to the same workflow and surface articles accordingly.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-amber">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 2 · Agentforce Architecture</div>
+          <div class="theme-title">The 5-Source Ceiling and Attachment Blindness Create Structural Gaps</div>
+          <div class="theme-summary">Two additional hard limits—a 5-article source cap and inability to read KB attachments—compound the retrieval quality issues, particularly for a B2B platform with complex technical documentation.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">What We're Experiencing</div>
+        <p class="fb-prose">Many real-world support questions require synthesizing information from more than 5 articles. Broad operational questions like "how do I cancel an order?" may have answers spread across multiple articles covering different retailer-specific variations. The 5-source limit means the agent gives an incomplete answer without signaling that more sources exist.</p>
+        <p class="fb-prose">Our Knowledge Base also stores critical technical specifications—EDI specs, retailer-specific requirements, integration guides—as PDF or image attachments within articles. Agentforce cannot read these attachments at all, which makes the agent nearly useless for a significant category of technical questions our support team handles daily.</p>
+        <div class="fb-section-label">Evidence</div>
+        <ul class="evidence-list">
+          <li data-icon="📌">Salesforce Support acknowledged the 5-source limit and suggested making the KB "more expansive and more concise"—our team noted this is a significant undertaking misaligned with our rollout timeline. <span class="evidence-source">Slack · Cole Garrow, Apr 13</span></li>
+          <li data-icon="📌">Retailer pages and EDI specifications are stored as PDF attachments; Agentforce cannot read them regardless of how the question is phrased. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+          <li data-icon="📌">Our workaround: convert screenshot content to plaintext and store in hidden-from-customer article fields. Works but is unsustainable at scale. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+        </ul>
+        <div class="fb-section-label">Our Ask</div>
+        <ul class="ask-list">
+          <li><div class="ask-num">1</div><div><strong>Raise the source ceiling</strong> or provide a configurable limit based on question complexity. At minimum, surface a signal to the agent that it may have an incomplete answer when the source limit is hit.</div></li>
+          <li><div class="ask-num">2</div><div><strong>Enable attachment reading</strong> for common formats (PDF, DOCX) within Knowledge articles. This is a high-value capability for B2B support organizations with spec-heavy documentation.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-purple">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 3 · Implementation Experience</div>
+          <div class="theme-title">Implementation Velocity Is Too Slow—Even for Motivated, Resourced Teams</div>
+          <div class="theme-summary">Rithum ran a formal Agentforce for Service POC with Salesforce (fall 2025), has dedicated admin capacity, and is actively prioritized on Agentforce—and we're still not in production 8 months later. The iteration loop is too long.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">What We're Experiencing</div>
+        <p class="fb-prose">Our Salesforce admin team has been the primary bottleneck—not through lack of effort, but because each configuration change requires navigating the Data Cloud sandbox, deployment via Gearset, and coordination with the broader SF admin team's competing priorities. The admin noted they had only been able to dedicate 4–6 hours per month to Agentforce improvement over a recent stretch, despite it being a stated priority.</p>
+        <p class="fb-prose">Jordan escalated this in April 2026, stating: "I need to be able to go faster with this Agentforce deployment so that we can iterate faster and get to a usable solution." The gap between the sandbox POC and production readiness has stretched from Q1 to H2 2026—a 6+ month slip from original targets.</p>
+        <div class="fb-section-label">Root Causes Identified</div>
+        <ul class="evidence-list">
+          <li data-icon="⚙️">Data Cloud sandbox is volatile (daily changes from multiple teams + Perficient); difficult to safely make iterative improvements. <span class="evidence-source">Slack · RJ Yenesel, Apr 29</span></li>
+          <li data-icon="⚙️">Salesforce Support's own Agentforce implementation guidance was limited—the team noted SF Support is "similar" (equally unfamiliar) in early sessions. <span class="evidence-source">Notion · AgentForce April doc</span></li>
+          <li data-icon="⚙️">Agentforce configuration requires deep admin expertise that's in short supply and shared across competing initiatives. <span class="evidence-source">Slack · Matt Schultz, Apr 30</span></li>
+          <li data-icon="⚙️">No lightweight "iterate without an admin" path exists for testing prompt changes and KB field configurations. <span class="evidence-source">Slack · Jordan Christensen, Apr 29</span></li>
+          <li data-icon="⚙️">Agentforce requires changing our Knowledge Base, Processes and Salesforce instance data structure (the "road") to accommodate the Agent (the "vehicle"), rather than the other way around. <span class="evidence-source">Slack · Matthew Schultz, May 15</span></li>
+        </ul>
+        <div class="fb-section-label">Our Ask</div>
+        <ul class="ask-list">
+          <li><div class="ask-num">1</div><div><strong>Provide a lightweight iteration environment</strong> that doesn't require Gearset deployment or Data Cloud sync for prompt template and field configuration changes. A "quick test" layer for agent configuration would dramatically accelerate iteration.</div></li>
+          <li><div class="ask-num">2</div><div><strong>Invest in implementation support quality.</strong> Agentforce specialist guidance needs to extend to practical "here's the exact configuration for your use case" level, not just directional advice.</div></li>
+          <li><div class="ask-num">3</div><div><strong>Clearer Trailhead paths</strong> for new Agentforce admins. When Jordan tried to get a new admin up to speed quickly (April 2026), there was no clear "beginner + advanced" learning sequence for Agentforce for Service specifically.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-teal">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 4 · Agent Configuration</div>
+          <div class="theme-title">Internal vs. External Agent Behavior Should Be Separately Configurable Without Duplicating Everything</div>
+          <div class="theme-summary">Default agent behaviors—like "escalate to a live agent" prompts—are appropriate for external agents but disruptive in internal rep-facing deployments. There's no easy way to fork these behaviors without rebuilding the agent.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">What We're Experiencing</div>
+        <p class="fb-prose">During our sandbox testing, Jordan noted that once the internal agent got stuck, it would recommend the user "escalate this to a live person"—a default behavior appropriate for an external customer-facing agent, but counterproductive when the user <em>is</em> the support rep. The agent should understand its deployment context.</p>
+        <p class="fb-prose">More broadly, our roadmap calls for building both an internal rep-assist agent and an external client-facing deflection agent. The configuration overhead of maintaining two separate agents with largely overlapping content but different behavioral rules adds significant admin burden.</p>
+        <div class="fb-section-label">Evidence</div>
+        <ul class="evidence-list">
+          <li data-icon="📌">Jordan flagged the "escalate to live person" behavior directly: "Probably not necessary for this internal one. Would probably be good to remove that option if we can." <span class="evidence-source">Slack · Jordan Christensen, Mar 27</span></li>
+          <li data-icon="📌">Cole suggested the external agent proactively state what it <em>can</em> answer at the start of a conversation to set client expectations—a configuration capability not clearly available today. <span class="evidence-source">Slack · Cole Garrow, Feb 27</span></li>
+          <li data-icon="📌">Alex Brown raised a specific security concern: preventing the agent from accidentally disclosing sensitive customer data to the wrong party in a multi-tenant environment. <span class="evidence-source">Slack · Alex Brown, Feb 27</span></li>
+        </ul>
+        <div class="fb-section-label">Our Ask</div>
+        <ul class="ask-list">
+          <li><div class="ask-num">1</div><div><strong>Support an "Internal / Employee" deployment mode</strong> that suppresses customer-facing default behaviors (live agent escalation prompts, apology language, etc.) out of the box.</div></li>
+          <li><div class="ask-num">2</div><div><strong>Built-in PII guardrails for case data context.</strong> As we expand to use case email messages as Agentforce context, we need confidence that PII is redacted before being surfaced in agent responses.</div></li>
+          <li><div class="ask-num">3</div><div><strong>Agent "scope declaration" capability</strong> — ability for an external agent to proactively communicate what topic areas it can and can't answer at the start of an interaction, to set client expectations and reduce frustration.</div></li>
+          <li><div class="ask-num">4</div><div><strong>External Pitfall Visibility:</strong> We need better visibility to external (client facing) Agentforce pitfalls and mitigation methods being suggested.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-green">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 5 · Strategic Roadmap</div>
+          <div class="theme-title">The Full Case Lifecycle AI Vision Is Real—We Need Roadmap Clarity to Plan Against It</div>
+          <div class="theme-summary">Rithum's H2 2026 roadmap depends on Agentforce for case classification, AI-generated summaries, next-best-action, and response drafting. We need to know what's production-ready, what's coming, and when.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">Our Strategic Vision</div>
+        <p class="fb-prose">Our AI roadmap (Project Polaris) maps out a full case lifecycle AI deployment in H2 2026, contingent on the ServiceNow → Salesforce migration completing by June. This includes: (1) L0 external deflection agent for client-facing case reduction; (2) internal rep-assist agent with KB + case data context; (3) case classification and auto-routing; (4) AI-generated case summaries on close; (5) next-best-action recommendations; and (6) AI-assisted email response drafting.</p>
+        <p class="fb-prose">We're currently stalled at step (2) in the pre-production sandbox after 8+ months. The gap between the Agentforce marketing vision and what's reliably achievable by a well-resourced but not deeply specialized team is significant—and we need honest clarity on which of these capabilities are genuinely production-ready vs. aspirational.</p>
+        <div class="fb-section-label">Evidence & Context</div>
+        <ul class="evidence-list">
+          <li data-icon="🗂️">Agentforce email drafting described as "just not good" and "too context limited" in our internal testing—occasionally produces a usable starter template but not reliable enough for deployment. <span class="evidence-source">Slack · Cole Garrow, Feb 27</span></li>
+          <li data-icon="🗂️">AI-generated case summaries and next-best-action are named items in our 2026 Strategy doc but have no implementation plan yet—dependency on production deployment of the base agent. <span class="evidence-source">Notion · AI Opportunity Map, Apr 30</span></li>
+          <li data-icon="🗂️">Product signal extraction from Salesforce cases is a key strategic goal—we want to use unified case history as structured product feedback input. <span class="evidence-source">Notion · AI Opportunity Map, Apr 30</span></li>
+        </ul>
+        <div class="fb-section-label">Our Ask</div>
+        <ul class="ask-list">
+          <li><div class="ask-num">1</div><div><strong>Publish a clear "what's production-ready today" guide</strong> for Agentforce for Service, with realistic expectations on what a ~10-person support org can achieve vs. a large enterprise with dedicated resources.</div></li>
+          <li><div class="ask-num">2</div><div><strong>Email response drafting roadmap.</strong> The current capability is insufficient for deployment. What does the improvement path look like and on what timeline?</div></li>
+          <li><div class="ask-num">3</div><div><strong>Native case clustering / product signal extraction.</strong> We're planning to build a weekly AI scan of closed cases to surface product themes. Is this something Salesforce plans to offer natively, or is it always a custom build?</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-blue">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 6 · What's Working</div>
+          <div class="theme-title">Where Service Cloud & Agentforce Are Genuinely Delivering Value</div>
+          <div class="theme-summary">Not all feedback is a pain point. There are specific capabilities and partnership moments that have meaningfully moved us forward.</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <ul class="works-well-list">
+          <li>When KB articles are well-structured and terminology-matched, Agentforce produces excellent, citation-backed step-by-step answers. The pricing updates and order exception examples were impressive.</li>
+          <li>The versatility with Data libraries, Prompt Templates, Agent Actions, and Agent Instructions is promising.</li>
+          <li>All presentations and guides provided for the implantation of Agentforce have been provided in a manageable and intuitive way.</li>
+          <li>The Salesforce Agentforce team was clutch with getting us over the oversimplification hump[cite: 11]. It is better understood that Case, Knowledge Base and related record access is important for getting robust and complete outputs[cite: 12].</li>
+          <li>The <strong>KB article → case association</strong> feature (attaching articles to cases to build context over time) is a smart long-term capability we're actively adopting.</li>
+          <li>The <strong>Salesforce AE and Agentforce specialist engagement</strong> (Jack Seminara, Thomas, Jamisen) has been responsive and genuinely helpful when we've escalated specific configuration questions.</li>
+          <li>Using <strong>Anthropic Claude Sonnet 4</strong> as the prompt template model for "Answer Questions with Knowledge" has been a positive choice—response quality is noticeably better than the default model we tested earlier.</li>
+          <li>The <strong>Salesforce Admin team's Gearset-based deployment pipeline</strong> is rigorous and well-governed, even if it slows iteration speed.</li>
+          <li>Service Cloud's <strong>omni-channel routing and case management</strong> foundations are solid—the migration from ServiceNow is building on a reliable base.</li>
+          <li>The <strong>Agentforce for Service POC</strong> program (fall 2025) was a valuable investment that gave us a head start on understanding the platform's architecture before committing to production.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="theme-card tc-red">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div>
+          <div class="theme-label">Theme 7 · Analytics & Reporting</div>
+          <div class="theme-title">Analytics Implementation Is a "Black Box" Separated from Setup</div>
+          <div class="theme-summary">Reporting dashboards are inaccessible in the sandbox environment, and analytics feel disconnected from the core Agent setup process[cite: 6, 7].</div>
+        </div>
+        <div class="theme-toggle-icon">▾</div>
+      </div>
+      <div class="theme-body">
+        <div class="fb-section-label">What We're Experiencing</div>
+        <p class="fb-prose">The analytics remains to be a bit of a black box at this time. We have not been able to view an example of the Reporting dashboards in the sandbox environment. This might be a feature enablement and permission issue, but Salesforce currently has this as a very separated related feature rather than being directly connected to the Agent setup and implantation process.</p>
+        
+        <div class="fb-section-label">Raw Feedback Capture</div>
+        <div style="margin-top: 16px; margin-bottom: 8px;">
+          <img src="Screenshot 2026-05-15 at 11.01.36 AM.png" alt="Slack feedback from Matthew Schultz regarding Agentforce implementation" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #e5e7eb;">
+        </div>
+      </div>
+    </div>
+
+    <div class="key-asks-block">
+      <h3>🎯 Top Product Asks for the Council</h3>
+      <p>The actionable requests from Rithum's Agentforce deployment experience — each grounded in specific implementation evidence.</p>
+      <div class="asks-grid">
+        <div class="ask-chip">
+          <div class="ask-chip-num">1</div>
+          <div class="ask-chip-text">
+            <strong>Configurable relevance fields by KB record type</strong>
+            <span>Allow "Title + Procedure Body" for task articles vs. "Title + Short Description" default</span>
+          </div>
+        </div>
+        <div class="ask-chip">
+          <div class="ask-chip-num">2</div>
+          <div class="ask-chip-text">
+            <strong>Attachment reading for KB articles</strong>
+            <span>PDFs and DOCX attachments hold critical B2B technical specs — currently invisible to the agent</span>
+          </div>
+        </div>
+        <div class="ask-chip">
+          <div class="ask-chip-num">3</div>
+          <div class="ask-chip-text">
+            <strong>Lightweight iteration environment</strong>
+            <span>Prompt & field config changes shouldn't require full Gearset deployments to test</span>
+          </div>
+        </div>
+        <div class="ask-chip">
+          <div class="ask-chip-num">4</div>
+          <div class="ask-chip-text">
+            <strong>Internal vs. external agent deployment modes</strong>
+            <span>Suppress live-agent escalation and customer-facing defaults in rep-assist deployments</span>
+          </div>
+        </div>
+        <div class="ask-chip">
+          <div class="ask-chip-num">5</div>
+          <div class="ask-chip-text">
+            <strong>Built-in PII redaction for case data context</strong>
+            <span>Required before we can safely use case email history as Agentforce context</span>
+          </div>
+        </div>
+        <div class="ask-chip">
+          <div class="ask-chip-num">6</div>
+          <div class="ask-chip-text">
+            <strong>Honest "production-ready" roadmap guide</strong>
+            <span>Which lifecycle AI features are actually deployable today for a mid-market team?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div></div>```<!-- /tab-feedback -->
+
+
+<script>
+  // Tab switching
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Attendee card section toggle
+  function toggle(btn) {
+    const icon = btn.querySelector('.section-icon');
+    const content = btn.nextElementSibling;
+    const isOpen = content.classList.contains('open');
+    content.classList.toggle('open', !isOpen);
+    icon.classList.toggle('open', !isOpen);
+  }
+
+  // Feedback theme toggle
+  function toggleTheme(header) {
+    const icon = header.querySelector('.theme-toggle-icon');
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    icon.classList.toggle('open', !isOpen);
+  }
+
+  // Search + Filter
+  const searchInput = document.getElementById('searchInput');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card');
+  const countEl = document.getElementById('visibleCount');
+  let activeFilter = 'all';
+
+  function updateVisible() {
+    const query = searchInput.value.toLowerCase().trim();
+    let count = 0;
+    cards.forEach(card => {
+      const name = (card.dataset.name || '').toLowerCase();
+      const company = (card.dataset.company || '').toLowerCase();
+      const sector = (card.dataset.sector || '');
+      const text = card.innerText.toLowerCase();
+      const matchesSearch = !query || name.includes(query) || company.includes(query) || text.includes(query);
+      const matchesFilter = activeFilter === 'all' || sector === activeFilter;
+      const show = matchesSearch && matchesFilter;
+      card.style.display = show ? '' : 'none';
+      if (show) count++;
+    });
+    countEl.textContent = count;
+  }
+
+  searchInput.addEventListener('input', updateVisible);
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      updateVisible();
+    });
+  });
+</script>
+</body>
+</html>

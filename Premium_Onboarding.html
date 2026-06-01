@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Onboarding — Internal Readout</title>
+<style>
+  :root {
+    --ink: #1a1d24;
+    --ink-soft: #4a5160;
+    --ink-faint: #767d8c;
+    --line: #e6e8ec;
+    --line-soft: #f0f2f5;
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --accent: #2f6f5e;
+    --accent-soft: #e8f1ee;
+    --accent-line: #c5ddd5;
+    --premium: #1f5a8f;
+    --premium-soft: #e9f1f8;
+    --maxw: 760px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  header.hero {
+    border-bottom: 1px solid var(--line);
+    padding: 64px 0 40px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+  h1 {
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin: 0 0 24px;
+    max-width: 640px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    padding-top: 4px;
+  }
+  .meta b { color: var(--ink-soft); font-weight: 600; }
+
+  section { padding: 44px 0; border-bottom: 1px solid var(--line-soft); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 22px;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .section-kicker {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  h3 { font-size: 16px; margin: 0 0 4px; }
+  p { margin: 0 0 16px; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; }
+
+  .callout {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 22px 0 0;
+    font-size: 15px;
+    color: #2a4a42;
+  }
+  .callout b { color: var(--accent); }
+
+  /* Problem / value grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 22px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    background: var(--bg);
+  }
+  .card .ic {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 7px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .card h3 { margin-bottom: 6px; }
+  .card p { font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+  /* Pillars */
+  .pillar {
+    display: flex;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .pillar:last-child { border-bottom: none; }
+  .pillar .num {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pillar .body p { font-size: 14px; color: var(--ink-soft); margin: 4px 0 0; }
+
+  /* Tier table */
+  .table-scroll { overflow-x: auto; margin-top: 22px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 560px;
+  }
+  th, td {
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  thead th {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    border-bottom: 2px solid var(--line);
+  }
+  tbody th {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .tier-free th { color: var(--ink-soft); }
+  .tier-std th { color: var(--accent); }
+  .tier-prem th { color: var(--premium); }
+  .tier-prem { background: var(--premium-soft); }
+  td .price { font-weight: 600; color: var(--ink); display: block; }
+  td .sub { color: var(--ink-faint); font-size: 13px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--bg-soft);
+    color: var(--ink-faint);
+    border: 1px solid var(--line);
+    margin-top: 6px;
+  }
+
+  /* Revenue snapshot */
+  .rev-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .rev {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .rev .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); font-weight: 600; }
+  .rev .big { font-size: 26px; font-weight: 700; margin: 8px 0 2px; letter-spacing: -0.01em; }
+  .rev .yr { font-size: 12px; color: var(--ink-faint); }
+  .rev.base { border-color: var(--accent-line); background: var(--accent-soft); }
+  .rev.base .big { color: var(--accent); }
+  .note { font-size: 13px; color: var(--ink-faint); margin-top: 16px; }
+
+  /* Metrics */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+
+  footer {
+    padding: 32px 0 56px;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 27px; }
+    .grid, .rev-grid { grid-template-columns: 1fr; }
+    header.hero { padding: 44px 0 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Internal Readout · Client Experience</p>
+    <h1>Premium Onboarding</h1>
+    <p class="lede">A white-glove, project-managed implementation experience that gets high-value clients fully operational, confident, and set up for long-term success — before they ever need ongoing support.</p>
+    <div class="meta">
+      <span><b>Owner:</b> Jordan Christensen</span>
+      <span><b>Status:</b> 🟡 In Progress</span>
+      <span><b>Target launch:</b> Q3 2026</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <div class="wrap">
+      <p class="section-kicker">The opportunity</p>
+      <h2>Why this matters</h2>
+      <p>Today, Rithum's onboarding is largely self-serve and one-to-many — documentation-led, not relationship-led. For mid-market and enterprise clients with complex integrations, multi-channel catalogs, and diverse user populations, that creates friction at the most critical moment in the client lifecycle: <strong>the first 90 days</strong>.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="ic">⚙️</div>
+          <h3>Complex integrations</h3>
+          <p>Multi-channel catalogs and varied tech stacks need hands-on sequencing, not generic guides.</p>
+        </div>
+        <div class="card">
+          <div class="ic">⏱️</div>
+          <h3>The first 90 days</h3>
+          <p>Early friction delays go-live and erodes confidence right when it matters most.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🔁</div>
+          <h3>Avoidable rework</h3>
+          <p>Gaps in setup surface later as post-go-live support load and re-onboarding.</p>
+        </div>
+        <div class="card">
+          <div class="ic">📈</div>
+          <h3>A growth lever</h3>
+          <p>Retailers can buy onboarding seats in bulk for their supplier network — accelerating network onboarding at scale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="section-kicker">How it works</p>
+      <h2>The program structure</h2>
+      <p>Standard and Premium onboarding are a white-glove project-management experience. The goal: a client who is operational and confident from day one. Three things define the offering.</p>
+      <div style="margin-top:10px;">
+        <div class="pillar">
+          <div class="num">1</div>
+          <div class="body">
+            <h3>Dedicated Onboarding Consultant</h3>
+            <p>A single point of contact who owns the entire onboarding timeline — sequencing the work, coordinating across Rithum teams, and surfacing blockers before they become delays. This is the clearest differentiator from the self-serve experience, and it mirrors best-in-class enterprise SaaS (e.g., Salesforce Signature, AWS/Google Cloud TAMs).</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="num">2</div>
+          <div class="body">
+            <h3>White Glove Product Content</h3>
+            <p>A deep dive into the client's current tech stack — catalog structure, data feeds, and integration mapping — to ensure data hygiene from day one. This goes beyond standard configuration and reduces the rework that commonly shows up in post-go-live support.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="num">3</div>
+          <div class="body">
+            <h3>Tailored Training</h3>
+            <p>Where useful, the consultant coordinates training calibrated to the client's actual user personas — Admins, Merchandising Leads, End Users — rather than generic platform walkthroughs. It's part of the broader engagement, not a separately-priced add-on.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        <b>Opt-in from launch.</b> No accounts are auto-enrolled or grandfathered. Standard is required for certain channels; Standard and Premium are otherwise voluntary add-ons.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="section-kicker">The tiers</p>
+      <h2>Three tiers, escalating depth</h2>
+      <p>Tier selection is based on account size, integration complexity, and the level of hands-on support needed during implementation. Onboarding is priced <strong>per supplier, per engagement</strong> — a flat fee per onboarding event, not a recurring subscription.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Initial onboarding</th>
+              <th>Ongoing</th>
+              <th>Key inclusions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tier-free">
+              <th>Free</th>
+              <td><span class="price">$0</span></td>
+              <td><span class="sub">N/A</span></td>
+              <td>Self-serve docs, knowledge base &amp; community access, unlimited email support.<span class="tag">Select retailers only</span></td>
+            </tr>
+            <tr class="tier-std">
+              <th>Standard</th>
+              <td>
+                <span class="price">$500 <span class="sub">/ supplier — Browser</span></span>
+                <span class="price">$1,750 <span class="sub">/ supplier — Integrated</span></span>
+              </td>
+              <td><span class="sub">N/A</span></td>
+              <td>Dedicated Consultant + 2 structured calls (Kickoff &amp; Testing). Continued knowledge base access.<span class="tag">Required for certain channels</span></td>
+            </tr>
+            <tr class="tier-prem">
+              <th>Premium</th>
+              <td><span class="price">$3,500 <span class="sub">/ supplier</span></span></td>
+              <td><span class="price">$1,000 <span class="sub">/ month</span></span></td>
+              <td>Everything in Standard, plus White Glove Product Content uploads. Ongoing support includes 2 content refreshes per month.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <b>Retailer bulk seats.</b> Retailers may purchase onboarding seats at any tier and assign them to specific suppliers during the sales process. Support subscriptions, however, must be purchased by the account receiving service.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="section-kicker">The upside</p>
+      <h2>Revenue snapshot</h2>
+      <p>Premium onboarding revenue is <strong>non-cumulative</strong> — it reflects new suppliers onboarded at the Premium tier each year and does not compound like a subscription. The figures below model the <strong>Base case</strong> at $3,500 per supplier; Standard-tier and recurring Premium support revenue are tracked separately.</p>
+      <div class="rev-grid">
+        <div class="rev">
+          <div class="label">2026</div>
+          <div class="big">$357K</div>
+          <div class="yr">102 suppliers · partial year</div>
+        </div>
+        <div class="rev base">
+          <div class="label">2027</div>
+          <div class="big">$623K</div>
+          <div class="yr">178 suppliers</div>
+        </div>
+        <div class="rev">
+          <div class="label">2028</div>
+          <div class="big">$910K</div>
+          <div class="yr">260 suppliers</div>
+        </div>
+      </div>
+      <p class="note">Base-case scenario shown. Conservative and Optimistic scenarios range from ~$186K (2026) to ~$1.61M (2028). Projections use estimated attach rates and will be refined with Finance and Sales.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="section-kicker">How we'll measure it</p>
+      <h2>Success metrics</h2>
+      <p>We'll track Premium Onboarding across client health, commercial impact, and operational performance. Headline measures:</p>
+      <div class="chips">
+        <span class="chip">NPS by onboarding tier</span>
+        <span class="chip">Time-to-first-value (signature → go-live)</span>
+        <span class="chip">Premium attach rate</span>
+        <span class="chip">In-flight upgrade rate</span>
+        <span class="chip">90-day completion rate</span>
+        <span class="chip">Post-go-live rework %</span>
+        <span class="chip">Consultant utilization &amp; capacity</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Premium Onboarding Model — Internal readout · Status: In Progress · Target launch Q3 2026<br>
+    Summarized from the <a href="https://www.notion.so/commercehub/Premium-Onboarding-Model-Strategy-Design-Doc-34fe0f2aafae81d780faf8bc7fc47e7d">Strategy &amp; Design Doc</a> (Notion). Figures are estimates pending Finance and Sales validation.
+  </div>
+</footer>
+
+</body>
+</html>
